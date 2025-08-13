@@ -1,15 +1,18 @@
-from django.shortcuts import render
 from django.http import JsonResponse
-import time
+from .latency_checker import check_latency
+from .models import LatencyResult
 
+SERVERS = [
+    "https://www.google.com",
+    "https://www.github.com"
+]
 def home(request):
-    return JsonResponse({"message": "Welcome to LatencyLens!"})
-
+    return ("welcome")
 def healthz(request):
-    start = time.time()
-    # Simulate a tiny operation
-    time.sleep(0.05)
-    latency = (time.time() - start) * 1000  # ms
-    return JsonResponse({"status": "ok", "latency_ms": round(latency, 2)})
+    latencies = check_latency(SERVERS)
 
+    # Save results to database
+    for server, latency in latencies.items():
+        LatencyResult.objects.create(server=server, latency_ms=latency)
 
+    return JsonResponse({"status": "ok", "latencies": latencies})
