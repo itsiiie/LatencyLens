@@ -1,0 +1,11 @@
+# Core Django framework
+Django>=4.2
+
+# Database drivers (PostgreSQL)
+psycopg2-binary>=2.9
+
+# For HTTP requests (latency checking)
+requests>=2.31
+
+# Environment variables management
+python-dotenv>=1.0
